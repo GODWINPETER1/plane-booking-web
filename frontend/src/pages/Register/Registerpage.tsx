@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { registerUser } from "../../api/auth";
 import planeImage from "../../assets/plane.jpg"; // You will add your airplane image here
 import { AxiosError } from "axios";
+import { useState } from "react";
 
 type FormData = {
   fullName: string;
@@ -21,13 +22,16 @@ export default function RegisterPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: yupResolver(schema) });
 
+const [ successMessage , setSuccessMessage] = useState("")
+
   const onSubmit = async (data: FormData) => {
     try {
       const res = await registerUser(data);
       console.log("Registered:", res);
-      alert("Registration successful!");
+      setSuccessMessage("🎉 Registration successful! You can now log in.")
     } catch (err) {
         const error = err as AxiosError<{message?: string}>;
+        setSuccessMessage("")
       alert(error.response?.data?.message || "Registration failed");
     }
   };
@@ -76,6 +80,13 @@ export default function RegisterPage() {
       <h2 className="text-2xl font-bold">Welcome</h2>
       <p className="text-gray-500 text-sm">Please enter your details</p>
     </div>
+
+    {
+      successMessage && (
+
+        <div className="bg-green-100 text-green-800 p-3 rounded-md mb-4"> {successMessage} </div>
+      )
+    }
 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Fullname */}

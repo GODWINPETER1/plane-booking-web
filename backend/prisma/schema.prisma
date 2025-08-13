@@ -1,0 +1,86 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  fullName  String
+  createdAt DateTime  @default(now())
+  bookings  Booking[]
+}
+
+model Airport {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique // e.g., JFK
+  name       String
+  city       String
+  country    String
+  createdAt  DateTime @default(now())
+  departures Flight[] @relation("Departures")
+  arrivals   Flight[] @relation("Arrivals")
+}
+
+model Flight {
+  id           Int         @id @default(autoincrement())
+  flightNumber String
+  departAt     DateTime
+  arriveAt     DateTime
+  fromId       Int
+  toId         Int
+  from         Airport     @relation("Departures", fields: [fromId], references: [id])
+  to           Airport     @relation("Arrivals", fields: [toId], references: [id])
+  fareClasses  FareClass[]
+  seats        Seat[]
+  bookings     Booking[]
+  createdAt    DateTime    @default(now())
+
+  @@index([fromId, toId, departAt])
+}
+
+model FareClass {
+  id       Int     @id @default(autoincrement())
+  code     String // ECON/BUSN/FIRST
+  price    Decimal @db.Decimal(10, 2)
+  flightId Int
+  flight   Flight  @relation(fields: [flightId], references: [id])
+}
+
+model Booking {
+  id         Int         @id @default(autoincrement())
+  userId     Int
+  flightId   Int
+  total      Decimal     @db.Decimal(10, 2)
+  status     String      @default("PENDING") // PENDING/CONFIRMED/CANCELLED
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+  flight     Flight      @relation(fields: [flightId], references: [id])
+  passengers Passenger[]
+}
+
+model Passenger {
+  id        Int     @id @default(autoincrement())
+  firstName String
+  lastName  String
+  seatId    Int?    @unique
+  bookingId Int
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  seat      Seat?   @relation(fields: [seatId], references: [id])
+}
+
+model Seat {
+  id        Int        @id @default(autoincrement())
+  seatNo    String
+  cabin     String // ECON/BUSN/FIRST
+  isBooked  Boolean    @default(false)
+  flightId  Int
+  flight    Flight     @relation(fields: [flightId], references: [id])
+  passenger Passenger? @relation
+}

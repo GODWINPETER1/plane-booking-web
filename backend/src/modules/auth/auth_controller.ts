@@ -1,7 +1,7 @@
 // Handle the response and request logic
 
 import type { Request , Response  } from "express";
-import * as authService from './auth_service.js';
+import * as authService from './auth_service';
 
 
 export const register = async (req: Request , res: Response): Promise<void> => {
@@ -19,5 +19,21 @@ export const register = async (req: Request , res: Response): Promise<void> => {
         } else {
             res.status(500).json({error: 'Failed to register'})
         }
+    }
+}
+
+// login controller 
+export const login = async (req: Request , res: Response): Promise<void> => {
+
+    try {
+
+        const { email , password} = req.body;
+        const token = await authService.loginUser(email , password);
+        res.status(200).json({ token })
+
+    } catch (error: any) {
+
+        res.status(401).json({error: error.message})
+
     }
 }

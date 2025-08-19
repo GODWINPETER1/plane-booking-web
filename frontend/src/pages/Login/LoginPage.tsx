@@ -1,38 +1,37 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { registerUser } from "../../api/auth";
+import { loginUser } from "../../api/auth";
 import planeImage from "../../assets/plane.jpg"; // You will add your airplane image here
 import { AxiosError } from "axios";
 import { useState } from "react";
 
 type FormData = {
-  fullName: string;
   email: string;
   password: string;
 };
 
 const schema = yup.object({
-  fullName: yup.string().required("Full name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
 });
 
-export default function RegisterPage() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } =
+export default function LoginPage() {
+
+  const {register ,  handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: yupResolver(schema) });
 
 const [ successMessage , setSuccessMessage] = useState("")
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await registerUser(data);
-      console.log("Registered:", res);
-      setSuccessMessage("🎉 Registration successful! You can now log in.")
+      const res = await loginUser(data);
+      console.log("login:", res);
+      setSuccessMessage("🎉 Login successful! You can now log in.")
     } catch (err) {
         const error = err as AxiosError<{message?: string}>;
         setSuccessMessage("")
-      alert(error.response?.data?.message || "Registration failed");
+      alert(error.response?.data?.message || "Login failed");
     }
   };
 
@@ -77,7 +76,7 @@ const [ successMessage , setSuccessMessage] = useState("")
   {/* Centered Content */}
   <div className="flex flex-col justify-center flex-1">
     <div className="mb-8 mt-12">
-      <h2 className="text-2xl font-bold">Welcome To Register Page </h2>
+      <h2 className="text-2xl font-bold">Welcome To Login Page </h2>
       <p className="text-gray-500 text-sm">Please enter your details</p>
     </div>
 
@@ -90,15 +89,6 @@ const [ successMessage , setSuccessMessage] = useState("")
 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Fullname */}
-      <div>
-        <input
-          type="text"
-          placeholder="Full Name"
-          {...register("fullName")}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-        />
-        {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
-      </div>
 
       {/* Email */}
       <div>
@@ -128,12 +118,12 @@ const [ successMessage , setSuccessMessage] = useState("")
         disabled={isSubmitting}
         className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 rounded-lg hover:opacity-90 transition"
       >
-        {isSubmitting ? "Registering..." : "Sign Up"}
+        {isSubmitting ? "Login..." : "Sign In"}
       </button>
     </form>
 
     <p className="text-sm text-center text-gray-500 mt-6">
-      Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login</a>
+      Dont have an account? <a href="/register" className="text-blue-500 hover:underline">Register</a>
     </p>
   </div>
 </div>

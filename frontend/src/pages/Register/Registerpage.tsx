@@ -2,9 +2,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { registerUser } from "../../api/auth";
-import planeImage from "../../assets/plane.jpg"; // You will add your airplane image here
+import planeImage from "../../assets/images/plane.jpg"; // You will add your airplane image here
 import { AxiosError } from "axios";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 type FormData = {
   fullName: string;
@@ -19,7 +20,9 @@ const schema = yup.object({
 });
 
 export default function RegisterPage() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } =
+
+  const { registerUsers } = useAuth()
+  const { register ,  handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: yupResolver(schema) });
 
 const [ successMessage , setSuccessMessage] = useState("")
@@ -27,7 +30,9 @@ const [ successMessage , setSuccessMessage] = useState("")
   const onSubmit = async (data: FormData) => {
     try {
       const res = await registerUser(data);
+
       console.log("Registered:", res);
+      registerUsers({ user: res.user } )
       setSuccessMessage("🎉 Registration successful! You can now log in.")
     } catch (err) {
         const error = err as AxiosError<{message?: string}>;

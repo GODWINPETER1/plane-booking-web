@@ -28,8 +28,8 @@ export const login = async (req: Request , res: Response): Promise<void> => {
     try {
 
         const { email , password} = req.body;
-        const token = await authService.loginUser(email , password);
-        res.status(200).json({ token })
+        const {token , role } = await authService.loginUser(email , password);
+        res.status(200).json({ token , role })
 
     } catch (error: any) {
 

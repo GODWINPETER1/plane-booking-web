@@ -2,9 +2,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { loginUser } from "../../api/auth";
-import planeImage from "../../assets/plane.jpg"; // You will add your airplane image here
+import planeImage from "../../assets/images/plane.jpg"; // You will add your airplane image here
 import { AxiosError } from "axios";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 type FormData = {
   email: string;
@@ -17,6 +19,10 @@ const schema = yup.object({
 });
 
 export default function LoginPage() {
+  
+  const { login  , user } = useAuth();
+  const navigate = useNavigate();
+ 
 
   const {register ,  handleSubmit, formState: { errors, isSubmitting } } =
     useForm<FormData>({ resolver: yupResolver(schema) });
@@ -26,8 +32,19 @@ const [ successMessage , setSuccessMessage] = useState("")
   const onSubmit = async (data: FormData) => {
     try {
       const res = await loginUser(data);
-      console.log("login:", res);
+      console.log("login:", res );
+      console.log(user?.fullName)
+      login({ token: res.token , user: res.user })
       setSuccessMessage("🎉 Login successful! You can now log in.")
+       console.log(res.user)
+       
+      if (res.role === "ADMIN") {
+
+        navigate("/admin")
+      } else {
+        navigate("/layout")
+      }
+     
     } catch (err) {
         const error = err as AxiosError<{message?: string}>;
         setSuccessMessage("")

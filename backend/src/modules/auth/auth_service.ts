@@ -35,7 +35,7 @@ export const registerUser = async ( data: any) => {
 }
 
 // LOGIN LOGIC
-export const loginUser = async (email: string , password_sent: string): Promise<string> => {
+export const loginUser = async (email: string , password_sent: string): Promise<{token: string , role: string}> => {
 
     // check if the user exists
     const user = await prisma.user.findUnique({ where: { email}});
@@ -60,12 +60,13 @@ export const loginUser = async (email: string , password_sent: string): Promise<
     const token = jwt.sign(
         {
             userId: user.id,
-            email: user.email
+            email: user.email,
+            role: user.role
         },
         secret,
 
         { expiresIn: '1h'}
     )
 
-    return token
+    return {token , role: user.role}
 }

@@ -27,7 +27,12 @@ export async function listAirportsHandler(req: Request, res: Response, next: Nex
 
 export async function getAirportHandler(req: Request, res: Response, next: NextFunction) {
   try {
+    
     const id = Number(req.params.id);
+    if(isNaN(id)) {
+      return res.status(400).json({ error: "Invalid airport ID"})
+    }
+
     const airport = await getAirportById(id);
     if (!airport) return res.status(404).json({ message: "Airport not found" });
     res.json(airport);

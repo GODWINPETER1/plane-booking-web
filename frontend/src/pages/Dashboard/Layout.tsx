@@ -4,6 +4,8 @@ import { PopulationDestinations } from '../../components/destinations/Destinatio
 import { TrustSection } from '../../components/trust/Trust';
 import SpecialPromotions from '../../components/promotions/SpecialPromotions';
 import { Testimonials } from '../../components/testmonial/Testmonial';
+import { Newsletter } from '../../components/cta/Cta';
+import { Footer } from '../../components/footer/Footer';
 export default function Layout() {  
 
   return (
@@ -14,6 +16,8 @@ export default function Layout() {
       <TrustSection/>
       <SpecialPromotions/>
       <Testimonials/>
+      <Newsletter/>
+      <Footer/>
     </div>
   );
 }

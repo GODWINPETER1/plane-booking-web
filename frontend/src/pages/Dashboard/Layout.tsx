@@ -6,6 +6,7 @@ import SpecialPromotions from '../../components/promotions/SpecialPromotions';
 import { Testimonials } from '../../components/testmonial/Testmonial';
 import { Newsletter } from '../../components/cta/Cta';
 import { Footer } from '../../components/footer/Footer';
+
 export default function Layout() {  
 
   return (

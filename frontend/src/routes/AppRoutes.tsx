@@ -11,6 +11,7 @@ import Pricing from "../admin/pages/Pricing";
 import Booking from "../admin/pages/Booking";
 import Reports from "../admin/pages/Report";
 import Settings from "../admin/pages/Settings";
+import Hotels from "../pages/Hotels/Hotels";
 
 
 export default function AppRoutes() {
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage/>}/>
         <Route path="/layout" element={<Layout/>}/>
+        <Route path="/hotels" element={<Hotels/>}/>
         
         {/* Admin Routes - using nested routing */}
         <Route path="/admin" element={<AdminDashboardLayout />}>

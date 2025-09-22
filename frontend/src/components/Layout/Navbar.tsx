@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Plane, Hotel, Car, ChevronDown,  Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { name: "Flights", icon: Plane },
-    { name: "Hotels", icon: Hotel },
-    { name: "Flight + Hotel", icon: Plane },
-    { name: "Car rental", icon: Car },
+    { name: "Flights", icon: Plane , Link: '/flights' },
+    { name: "Hotels", icon: Hotel , Link: '/hotels'},
+    { name: "Flight + Hotel", icon: Plane , Link: '/flight/hotels' },
+    { name: "Car rental", icon: Car , Link: '/car'},
   ];
 
   return (
@@ -16,20 +17,20 @@ export const Navbar = () => {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <h1 className="text-2xl font-extrabold cursor-pointer tracking-wide">
-          gAirline
+          <Link to= "/layout"> gAirline </Link>
         </h1>
 
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center space-x-6">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.name}
-              href="#"
+              to={item.Link}
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition"
             >
               <item.icon size={18} />
-              <span>{item.name}</span>
-            </a>
+              <span>  {item.name}  </span>
+            </Link>
           ))}
           <button className="flex items-center gap-1 px-3 py-2 rounded-md hover:bg-gray-800 transition">
             <span>More</span>

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC , JSX } from "react";
 import { ShieldCheck , Headphones , CreditCard , Globe} from "lucide-react";
 
 
@@ -6,7 +6,7 @@ interface TrustFeatures {
     id: number;
     title: string;
     description: string;
-    icon: JSX.element;
+    icon: JSX.Element;
 }
 
 const features: TrustFeatures[] = [
